@@ -5,7 +5,7 @@ import { usePatternClass } from "@/hooks/patternclass";
 export default function Home() {
   return (
     <div>
-      {/* <Appbar /> */}
+      <Appbar />
       <HeroSection getPattern={usePatternClass} />
     </div>
   );
