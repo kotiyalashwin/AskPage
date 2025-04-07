@@ -4,6 +4,7 @@ import "./globals.css";
 import { Providers } from "@/provider";
 import { useTheme } from "next-themes";
 import { usePatternClass } from "@/hooks/patternclass";
+import { Appbar } from "@/components/appbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
