@@ -2,7 +2,8 @@ import { BookOpen } from "lucide-react";
 import { ModeToggle } from "./toggle-theme";
 import { Button } from "./ui/button";
 import Link from "next/link";
-import { auth, signIn, signOut } from "@/lib/auth";
+import { auth, signOut } from "@/lib/auth";
+import { VioletButton } from "./violetButton";
 
 export const Appbar = async () => {
   const session = await auth();
@@ -33,7 +34,13 @@ export const Appbar = async () => {
                 await signOut();
               }}
             >
-              <Button>LogOut</Button>
+              <Button
+                type="submit"
+                variant={"outline"}
+                className="border-violet-600 bg-transparent border-2  hover:bg-background"
+              >
+                <Link href={"/login"}>Logout</Link>
+              </Button>
             </form>
           ) : (
             <div className="flex space-x-4">
@@ -45,9 +52,13 @@ export const Appbar = async () => {
                 <Link href={"/login"}>Login</Link>
               </Button>
 
-              <Button className="hidden md:block bg-violet-600 text-white hover:bg-violet-800">
+              <VioletButton className="hidden md:block">
                 Get Extention
-              </Button>
+              </VioletButton>
+
+              {/* <Button className="hidden md:block bg-violet-600 text-white hover:bg-violet-800">
+                Get Extention
+              </Button> */}
             </div>
           )}
 
