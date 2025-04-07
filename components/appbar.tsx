@@ -39,7 +39,7 @@ export const Appbar = async () => {
                 variant={"outline"}
                 className="border-violet-600 bg-transparent border-2  hover:bg-background"
               >
-                <Link href={"/"}>Logout</Link>
+                Logout
               </Button>
             </form>
           ) : (
