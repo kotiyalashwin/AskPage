@@ -8,21 +8,19 @@ export default function InputForm({
   placeholder,
   label,
   name,
+  required,
+  onChange,
 }: {
   placeholder: string;
   label: string;
   name: string;
-  onChange?: (value: string) => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  required?: boolean;
 }) {
-  const [value, setValue] = useState("");
   return (
     <div className="space-y-2 p-2">
       <Label className="text-gray-300">{label}:</Label>
-      <Input
-        placeholder={placeholder}
-        name={name}
-        onChange={(e) => setValue(e.target.value)}
-      />
+      <Input placeholder={placeholder} name={name} onChange={onChange} />
     </div>
   );
 }

@@ -1,3 +1,5 @@
+"use client";
+
 import { signIn } from "@/lib/auth";
 import React from "react";
 import { Button } from "./ui/button";
@@ -30,7 +32,7 @@ export default function AuthCard({
         <CardFooter className="justify-center">
           <form
             action={async () => {
-              "use server";
+              // "use server";
               await signIn("google", { redirectTo: "/dashboard" });
             }}
           >

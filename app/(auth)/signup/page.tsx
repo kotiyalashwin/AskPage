@@ -16,7 +16,6 @@ export default function page() {
             await signIn("credentials", formData);
           }}
         >
-          <InputForm name="name" placeholder="optional" label="Name" />
           <InputForm name="email" placeholder="xyz@gmail.com" label="Email" />
           <InputForm name="password" placeholder="123456" label="Password" />
           <VioletButton type={"submit"}>Sign Up</VioletButton>

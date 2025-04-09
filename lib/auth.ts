@@ -1,16 +1,22 @@
-import NextAuth from "next-auth";
+import NextAuth, { AuthError } from "next-auth";
 import Google from "next-auth/providers/google";
-import CredentialProvider from "next-auth/providers/credentials";
+import Credentials from "next-auth/providers/credentials";
 import { prisma } from "./db";
 import type { NextAuthConfig } from "next-auth";
 import bcrypt from "bcryptjs";
 import { CredentialSchema } from "@/schemas/auth";
 
-type CredentialsData = {
-  password: string;
-  name?: string;
+interface CredentialsData {
   email: string;
-};
+  password: string;
+}
+
+class customError extends AuthError {
+  constructor(message: string) {
+    super();
+    this.message = message;
+  }
+}
 
 export const authOptions: NextAuthConfig = {
   providers: [
@@ -18,18 +24,17 @@ export const authOptions: NextAuthConfig = {
       clientId: process.env.AUTH_GOOGLE_ID,
       clientSecret: process.env.AUTH_GOOGLE_CLIENT_SECRET,
     }),
-    CredentialProvider({
+    Credentials({
       name: "Credentials",
       credentials: {
-        name: {},
-        email: { required: true, type: "text" },
-        password: { required: true, type: "password" },
+        email: { required: true, type: "text", name: "email" },
+        password: { required: true, type: "password", name: "password" },
       },
       async authorize(credentials) {
         const { success } = CredentialSchema.safeParse(credentials);
         const { email, password } = credentials as CredentialsData;
         if (!success) {
-          return null;
+          throw new customError("Invalid Credentials");
         }
         const hashedPassword = await bcrypt.hash(password, 10);
         const existingUser = await prisma.user.findFirst({
@@ -38,9 +43,13 @@ export const authOptions: NextAuthConfig = {
           },
         });
 
+        if (!existingUser) {
+          throw new customError("No Account Found");
+          // throw new Error(JSON.stringify({ code: 404, message: "blabla" }));
+        }
         if (existingUser && existingUser.password) {
           const passValidation = await bcrypt.compare(
-            password,
+            hashedPassword,
             existingUser?.password
           );
 
@@ -51,32 +60,22 @@ export const authOptions: NextAuthConfig = {
               email: existingUser.email,
             };
           }
-          return null;
+          // throw new Error(JSON.stringify({ code: 401 }));
+          throw new customError("Invalid Credentials");
         }
-
-        try {
-          const user = await prisma.user.create({
-            data: {
-              email: email,
-              password: hashedPassword,
-              provider: "Credentials",
-            },
-          });
-
-          return {
-            id: user.id.toString(),
-            email: user.email,
-          };
-        } catch (e) {
-          console.log(e);
-        }
-
-        return null;
+        throw new customError("Failed!!");
       },
     }),
   ],
   callbacks: {
     async signIn({ user, account, profile }) {
+      //user looks like this
+      // {
+      //   id: string,
+      //   name: 'Peter Jacxsens',
+      //   email: string,
+      //   image: string
+      // },
       if (!user.email) return false;
 
       const existing = await prisma.user.findUnique({
@@ -97,6 +96,14 @@ export const authOptions: NextAuthConfig = {
       return true;
     },
 
+    //customize the token send to the browser
+    async jwt({ user, account, token }) {
+      //we add the provider type to the toen
+      token.provier = account?.provider;
+
+      return token;
+    },
+    //what the auth() will return us
     async session({ session, token }) {
       if (!session.user.email) return session;
 
@@ -106,6 +113,9 @@ export const authOptions: NextAuthConfig = {
         },
       });
 
+      //this adds the id of the user to the session
+      // so auth() will give something like {... , id : 1},
+      // using this ID we can do some DB calls for data using server actions
       if (current) {
         session.user.id = String(current.id);
       }

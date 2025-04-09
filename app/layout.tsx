@@ -5,6 +5,7 @@ import { Providers } from "@/provider";
 import { useTheme } from "next-themes";
 import { usePatternClass } from "@/hooks/patternclass";
 import { Appbar } from "@/components/appbar";
+import { Toaster } from "sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,6 +32,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased `}
       >
+        <Toaster />
         <Providers>{children}</Providers>
       </body>
     </html>
