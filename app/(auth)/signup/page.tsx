@@ -8,36 +8,62 @@ import { signIn } from "@/lib/auth";
 import { CredentialSchema, newUserSchema } from "@/schemas/auth";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import React from "react";
 import { toast } from "sonner";
 
 export default function page() {
   const router = useRouter();
+  const email = React.useRef("");
+  const password = React.useRef("");
+  const [requiredError, setRequiredError] = React.useState({
+    email: false,
+    password: false,
+  });
 
-  const handleSubmit = async (
-    formData: newUserSchema,
-    e: React.FormEvent<HTMLFormElement>
-  ) => {
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    email.current = e.target.value;
+    setRequiredError((prev) => ({ ...prev, email: false }));
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    password.current = e.target.value;
+    setRequiredError((prev) => ({ ...prev, password: false }));
+  };
+
+  const handleSubmit = async (e?: React.FormEvent<HTMLFormElement>) => {
     try {
-      e.preventDefault();
+      if (e) e.preventDefault();
 
+      if (!email.current || !password.current) {
+        // toast.dismiss(toastId);
+        setRequiredError({
+          email: email.current ? false : true,
+          password: password.current ? false : true,
+        });
+        toast.warning("Fill required fields");
+        return;
+      }
       const toastId = toast.loading("Signing Up");
-      const { success } = CredentialSchema.safeParse(formData);
-      console.log();
+
+      const formData = { email: email.current, password: password.current };
+
+      const { success, error } = CredentialSchema.safeParse(formData);
       if (!success) {
         toast.dismiss(toastId);
-        toast.error("Wrong Inputs");
+        toast.error("Enter Valid Email and Password");
+
         return;
       }
       const res = await newUser(formData);
+      toast.dismiss(toastId);
 
       if (res?.error) {
-        toast.dismiss(toastId);
         toast.error(res.error.message);
-      } else {
-        toast.success("Account Created Successfully");
+        return;
       }
+      toast.success("Account Created Successfully");
 
-      // router.push("/dashboard");
+      router.push("/dashboard");
     } catch {
       toast.error("Something Went Wrong");
     }
@@ -45,20 +71,21 @@ export default function page() {
   return (
     <div className="w-screen h-screen flex justify-center items-center  patternDark">
       <AuthCard title="Welcome to AskPage.AI">
-        <form
-          className="flex flex-col gap-4"
-          onSubmit={(e) =>
-            handleSubmit(
-              {
-                email: "test1@gmail.com",
-                password: "",
-              },
-              e
-            )
-          }
-        >
-          <InputForm name="email" placeholder="xyz@gmail.com" label="Email" />
-          <InputForm name="password" placeholder="123456" label="Password" />
+        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+          <InputForm
+            onChange={handleEmailChange}
+            required={requiredError.email}
+            name="email"
+            placeholder="xyz@gmail.com"
+            label="Email"
+          />
+          <InputForm
+            onChange={handlePasswordChange}
+            required={requiredError.password}
+            name="password"
+            placeholder="123456"
+            label="Password"
+          />
           <VioletButton type={"submit"}>Sign Up</VioletButton>
           <p className="text-center text-violet-400">
             Existing User?{" "}

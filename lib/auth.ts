@@ -42,7 +42,8 @@ export const authOptions: NextAuthConfig = {
             email: email,
           },
         });
-
+        console.log(existingUser);
+        console.log(hashedPassword);
         if (!existingUser) {
           throw new customError("No Account Found");
           // throw new Error(JSON.stringify({ code: 404, message: "blabla" }));
@@ -50,7 +51,7 @@ export const authOptions: NextAuthConfig = {
         if (existingUser && existingUser.password) {
           const passValidation = await bcrypt.compare(
             hashedPassword,
-            existingUser?.password
+            existingUser.password
           );
 
           if (passValidation) {

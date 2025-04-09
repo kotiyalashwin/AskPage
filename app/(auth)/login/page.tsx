@@ -4,14 +4,15 @@ import AuthCard from "@/components/authcard";
 import InputForm from "@/components/input";
 import { toast } from "sonner";
 import { VioletButton } from "@/components/violetButton";
-import { signIn } from "@/lib/auth";
 import Link from "next/link";
 import React from "react";
 import { authenticate } from "@/lib/actions/authenticate";
-// import { useRouter } from "next/navigation";
+import { CredentialSchema } from "@/schemas/auth";
+
+import { useRouter } from "next/navigation";
 
 export default function page() {
-  // const router = useRouter();
+  const router = useRouter();
   const email = React.useRef("");
   const password = React.useRef("");
   const [requiredError, setRequiredError] = React.useState({
@@ -29,28 +30,36 @@ export default function page() {
   };
 
   const handleSubmit = async (e?: React.FormEvent<HTMLFormElement>) => {
-    const loadId = toast.loading("Signin In");
     if (e) {
       e.preventDefault();
     }
+    if (!email.current || !password.current) {
+      // toast.dismiss(toastId);
+      setRequiredError({
+        email: email.current ? false : true,
+        password: password.current ? false : true,
+      });
+      toast.warning("Fill required fields");
+      return;
+    }
+    const loadId = toast.loading("Signin In");
 
-    const res = await authenticate({
-      email: email.current,
-      password: password.current,
-    });
+    const formData = { email: email.current, password: password.current };
+
+    const { success } = CredentialSchema.safeParse(formData);
+    if (!success) {
+      toast.dismiss(loadId);
+      toast.error("Wrong Inputs");
+      return;
+    }
+    const res = await authenticate(formData);
     toast.dismiss(loadId);
-    if (res.error) {
+    if (res?.error) {
       toast.warning(res.error.message);
       return;
     }
     toast.success("Signed IN");
-
-    // const sigininResponse = await signIn("credentials", {
-    //   email: email.current,
-    //   password: password.current,
-    //   redirect: false,
-    // });
-    // console.log("SignIN Responsea", sigininResponse);
+    router.push("/dashboard");
   };
   return (
     <div className="w-screen h-screen flex justify-center items-center  patternDark">
