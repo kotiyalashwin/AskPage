@@ -22,13 +22,13 @@ export const Appbar = async () => {
             Working
           </Link>
 
-          <Link
+          {/* <Link
             className="hover:text-violet-600"
             href={"#features"}
             // scroll={false}
           >
             Features
-          </Link>
+          </Link> */}
           <Link
             className="hover:text-violet-600"
             href={"#pricing"}
