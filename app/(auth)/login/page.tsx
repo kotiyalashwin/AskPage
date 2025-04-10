@@ -59,7 +59,7 @@ export default function page() {
       return;
     }
     toast.success("Signed IN");
-    router.push("/dashboard");
+    router.push("/");
   };
   return (
     <div className="w-screen h-screen flex justify-center items-center  patternDark">

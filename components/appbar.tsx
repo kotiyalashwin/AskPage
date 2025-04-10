@@ -12,36 +12,53 @@ export const Appbar = async () => {
       <div className="container flex justify-between p-4 items-center">
         <div className="flex  items-center">
           <BookOpen size={30} />{" "}
-          <Link href={"/"} className="ml-4 cursor-pointer">
+          <Link href={""} className="ml-4 cursor-pointer">
             AskPage.Ai
           </Link>
         </div>
 
-        <nav className="hidden md:flex space-x-4 items-center">
+        <nav className="hidden md:flex space-x-4 items-center justify-evenly">
           <Link className="hover:text-violet-600" href={"#working"}>
-            How It Works
+            Working
           </Link>
-          <Link className="hover:text-violet-600" href={"#features"}>
+
+          <Link
+            className="hover:text-violet-600"
+            href={"#features"}
+            // scroll={false}
+          >
             Features
+          </Link>
+          <Link
+            className="hover:text-violet-600"
+            href={"#pricing"}
+            // scroll={false}
+          >
+            Pricing
           </Link>
         </nav>
 
-        <div className="flex space-x-4">
+        <div className="flex space-x-4 items-center">
           {session ? (
-            <form
-              action={async () => {
-                "use server";
-                await signOut();
-              }}
-            >
-              <Button
-                type="submit"
-                variant={"outline"}
-                className="border-violet-600 bg-transparent border-2  hover:bg-background"
+            <>
+              <VioletButton>
+                <Link href={"/dashboard"}>Profile</Link>
+              </VioletButton>
+              <form
+                action={async () => {
+                  "use server";
+                  await signOut();
+                }}
               >
-                Logout
-              </Button>
-            </form>
+                <Button
+                  type="submit"
+                  variant={"outline"}
+                  className="border-violet-600 bg-transparent border-2  hover:bg-background"
+                >
+                  Logout
+                </Button>
+              </form>
+            </>
           ) : (
             <div className="flex space-x-4">
               <Button
