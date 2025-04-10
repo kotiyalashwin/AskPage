@@ -36,24 +36,25 @@ export const authOptions: NextAuthConfig = {
         if (!success) {
           throw new customError("Invalid Credentials");
         }
-        const hashedPassword = await bcrypt.hash(password, 10);
+        // const hashedPassword = await bcrypt.hash(password, 10);
         const existingUser = await prisma.user.findFirst({
           where: {
             email: email,
           },
         });
         console.log(existingUser);
-        console.log(hashedPassword);
+        console.log(password);
+        // console.log(hashedPassword);
         if (!existingUser) {
           throw new customError("No Account Found");
           // throw new Error(JSON.stringify({ code: 404, message: "blabla" }));
         }
         if (existingUser && existingUser.password) {
           const passValidation = await bcrypt.compare(
-            hashedPassword,
+            password,
             existingUser.password
           );
-
+          console.log(passValidation);
           if (passValidation) {
             console.log("success login");
             return {
