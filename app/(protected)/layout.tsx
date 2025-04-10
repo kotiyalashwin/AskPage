@@ -13,11 +13,6 @@ export default async function Layout({
   if (!sessiion?.user) {
     redirect("/api/auth/signin");
   } else {
-    return (
-      <>
-        <Appbar />
-        {children}
-      </>
-    );
+    return <>{children}</>;
   }
 }

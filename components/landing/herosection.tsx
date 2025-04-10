@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import Link from "next/link";
 import { motion } from "motion/react";
 export const HeroSection = ({ getPattern }: { getPattern(): string }) => {

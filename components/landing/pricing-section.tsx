@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { PricingCheckIcon } from "@/components/pricingcheckicon";
+import { PricingCheckIcon } from "@/components/landing/pricingcheckicon";
 import { Badge } from "@/components/ui/badge";
 
 interface PricingFeature {

@@ -1,7 +1,7 @@
 import { Appbar } from "@/components/appbar";
-import { HeroSection } from "@/components/herosection";
-import { PricingSection } from "@/components/pricing-section";
-import { WorkingSection } from "@/components/workingsection";
+import { HeroSection } from "@/components/landing/herosection";
+import { PricingSection } from "@/components/landing/pricing-section";
+import { WorkingSection } from "@/components/landing/workingsection";
 import { usePatternClass } from "@/hooks/patternclass";
 
 export default function Home() {
