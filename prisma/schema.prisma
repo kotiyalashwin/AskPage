@@ -23,10 +23,35 @@ model User{
   email String @unique
   password String? 
   provider Provider
-  
-
+  platformToken String? @unique
+  planId String 
+  usedRequest Int @default(0)
+  plan  Plan  @relation(references: [id], fields: [planId])
 }
-enum Plan{
+
+model Plan{
+  id String @id
+  name PlanType
+  description String
+  price     Int
+  totalRequest Int
+  features Json
+  users User[]
+
+  @@unique([name])
+}
+
+
+// model Session{
+//   id Int @id @default(autoincrement())
+//   userId Int  
+//   sessionToken String
+//   expires DateTime
+//   user User @relation(fields: [userId], references: [id], onDelete:Cascade)
+//   @@index([userId])
+// }
+
+enum PlanType{
   Free
   Pro
   Premium

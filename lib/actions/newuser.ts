@@ -1,7 +1,7 @@
 "use server";
 
 import { newUserSchema } from "@/schemas/auth";
-import { prisma } from "../db";
+import { prisma } from "../../db/db";
 import bcrypt from "bcryptjs";
 
 export const newUser = async (credentials: newUserSchema) => {
@@ -21,6 +21,9 @@ export const newUser = async (credentials: newUserSchema) => {
 
     await prisma.user.create({
       data: {
+        plan: {
+          connect: { name: "Free" },
+        },
         email: email,
         password: hshpw,
         provider: "Credentials",
