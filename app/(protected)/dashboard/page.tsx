@@ -4,18 +4,10 @@ import { DashboardHeader } from "@/components/dashboard/header";
 import { PlanCard } from "@/components/dashboard/plan-card";
 import { UrlHistoryCard } from "@/components/dashboard/url-history";
 import { planDetails } from "@/lib/actions/plandetails";
-import { auth } from "@/lib/auth";
-
-type planDetails = {
-  usedRequest: number;
-  plan: {
-    totalRequest: number;
-    name: string;
-  };
-} | null;
+import { PlanDetails } from "@/schemas/plan";
 
 async function page() {
-  const userPlanDetails: planDetails = await planDetails();
+  const userPlanDetails: PlanDetails | null = await planDetails();
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground ">
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
@@ -31,7 +23,7 @@ async function page() {
               totalRequest={userPlanDetails?.plan.totalRequest || 0}
               usedRequest={userPlanDetails?.usedRequest || 0}
             />
-            <PlanCard plan={"Free"} />
+            <PlanCard plan={userPlanDetails?.plan || null} />
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <UrlHistoryCard />
