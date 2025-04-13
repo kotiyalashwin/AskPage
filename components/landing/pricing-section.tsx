@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { JsonValue } from "@prisma/client/runtime/library";
 import {
   Card,
   CardContent,
@@ -10,9 +11,20 @@ import {
 import { PricingCheckIcon } from "@/components/landing/pricingcheckicon";
 import { Badge } from "@/components/ui/badge";
 import { getPlans } from "@/lib/actions/getplans";
+import Link from "next/link";
+
+interface Plans {
+  popular: boolean;
+  name: "Free" | "Pro" | "Premium";
+  id: string;
+  description: string;
+  price: number;
+  totalRequest: number;
+  features: JsonValue;
+}
 
 export async function PricingSection() {
-  const pricingTiers = await getPlans();
+  const pricingTiers: Plans[] = await getPlans();
 
   return (
     <section
@@ -69,24 +81,34 @@ export async function PricingSection() {
                 </CardHeader>
                 <CardContent className="flex-1">
                   <ul className="space-y-3">
-                    {tier &&
-                      tier.features &&
-                      tier.features.map((feature, i) => (
-                        <li key={i} className="flex items-start gap-3">
-                          {feature.included ? (
-                            <PricingCheckIcon />
-                          ) : (
-                            <div className="h-4 w-4 rounded-full border border-muted" />
-                          )}
-                          <span
-                            className={
-                              feature.included ? "" : "text-muted-foreground"
+                    {
+                      // @ts-ignore
+                      tier &&
+                        Array.isArray(tier.features) &&
+                        tier.features.map((feature, i) => (
+                          <li key={i} className="flex items-start gap-3">
+                            {
+                              // @ts-ignore
+                              feature.included ? (
+                                <PricingCheckIcon />
+                              ) : (
+                                <div className="h-4 w-4 rounded-full border border-muted" />
+                              )
                             }
-                          >
-                            {feature.text}
-                          </span>
-                        </li>
-                      ))}
+                            <span
+                              className={
+                                // @ts-ignore
+                                feature.included ? "" : "text-muted-foreground"
+                              }
+                            >
+                              {
+                                // @ts-ignore
+                                feature.text
+                              }
+                            </span>
+                          </li>
+                        ))
+                    }
                   </ul>
                 </CardContent>
                 <CardFooter>
@@ -96,7 +118,9 @@ export async function PricingSection() {
                     }`}
                     variant={tier.popular ? "default" : "outline"}
                   >
-                    Get Now
+                    <Link className="w-full" href={"/signup"}>
+                      Get Now
+                    </Link>
                   </Button>
                 </CardFooter>
               </Card>

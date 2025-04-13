@@ -1,3 +1,4 @@
+"use server";
 import { prisma } from "@/db/db";
 
 export const getPlans = async () => {
