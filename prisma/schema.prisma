@@ -27,6 +27,15 @@ model User{
   planId String 
   usedRequest Int @default(0)
   plan  Plan  @relation(references: [id], fields: [planId])
+  url  URLS[]
+}
+
+model URLS{
+  id Int @id @default(autoincrement())
+  url String 
+  userId Int
+  user User @relation(fields: [userId],references: [id])
+  status Status
 }
 
 model Plan{
@@ -55,4 +64,9 @@ enum PlanType{
   Free
   Pro
   Premium
+}
+
+enum Status{
+  Success
+  Failed
 }

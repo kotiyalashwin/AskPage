@@ -10,8 +10,7 @@ export const HeroSection = ({ getPattern }: { getPattern(): string }) => {
     <motion.section
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 1 }}
-      className={`${pattern} w-full h-[90vh]`}
+      className={` w-full h-[90vh]`}
     >
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-10 w-72 h-72 bg-violet-600/20 rounded-full blur-[100px]" />

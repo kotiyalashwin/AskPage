@@ -7,49 +7,20 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Clock, Link } from "lucide-react";
+import { getUrlHistory } from "@/lib/actions/getURLS";
 // import { UrlHistory } from "@/data/mock-data";
 // import { format } from "date-fns";
 
 export interface UrlHistory {
-  id: string;
+  id: number;
   url: string;
-  timestamp: string;
-  status: "success" | "failed";
+  status: "Success" | "Failed";
 }
-export const urlHistory: UrlHistory[] = [
-  {
-    id: "1",
-    url: "https://api.example.com/analyze",
-    timestamp: "2025-04-10T09:23:42",
-    status: "success",
-  },
-  {
-    id: "2",
-    url: "https://api.example.com/summarize",
-    timestamp: "2025-04-09T14:57:12",
-    status: "success",
-  },
-  {
-    id: "3",
-    url: "https://api.example.com/generate",
-    timestamp: "2025-04-08T11:32:05",
-    status: "failed",
-  },
-  {
-    id: "4",
-    url: "https://api.example.com/analyze",
-    timestamp: "2025-04-07T16:45:23",
-    status: "success",
-  },
-  {
-    id: "5",
-    url: "https://api.example.com/extract",
-    timestamp: "2025-04-06T08:12:36",
-    status: "success",
-  },
-];
+// export const urlHistory: UrlHistory[] =
 
-export function UrlHistoryCard() {
+export async function UrlHistoryCard() {
+  const urlHistory: UrlHistory[] | [] = await getUrlHistory();
+
   return (
     <Card className="shadow-md">
       <CardHeader className="pb-2">
@@ -78,7 +49,7 @@ export function UrlHistoryCard() {
                     </p>
                     <Badge
                       variant={
-                        item.status === "success" ? "outline" : "destructive"
+                        item.status === "Success" ? "outline" : "destructive"
                       }
                       className="text-xs"
                     >

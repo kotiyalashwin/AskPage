@@ -5,7 +5,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 // import { UserPlan } from "@/data/mock-data";
 import { Button } from "@/components/ui/button";
 import { FeaturesAll } from "@/schemas/plan";

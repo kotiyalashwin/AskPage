@@ -125,6 +125,7 @@ export const authOptions: NextAuthConfig = {
       }
       if (user) {
         token.platformToken = user.platformToken;
+        token.id = user.id;
       }
       return token;
     },
@@ -132,6 +133,7 @@ export const authOptions: NextAuthConfig = {
     async session({ session, token }) {
       if (session.user) {
         session.user.platformToken = token.platformToken;
+        session.user.id = token.id;
       }
       return session;
     },
