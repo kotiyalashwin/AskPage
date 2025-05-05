@@ -28,6 +28,7 @@ model User{
   usedRequest Int @default(0)
   plan  Plan  @relation(references: [id], fields: [planId])
   url  URLS[]
+  savedChats Chats[]
 }
 
 model URLS{
@@ -39,7 +40,7 @@ model URLS{
 }
 
 model Plan{
-  id String @id
+  id String @id 
   name PlanType
   description String
   price     Int
@@ -50,6 +51,14 @@ model Plan{
   @@unique([name])
 }
 
+model Chats{
+  id Int @id @default(autoincrement())
+  usermail String
+  savedAt DateTime @default(now())
+  history  Json
+
+  User User @relation(references: [email] , fields: [usermail])
+}
 
 // model Session{
 //   id Int @id @default(autoincrement())
